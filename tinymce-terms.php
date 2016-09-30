@@ -74,6 +74,7 @@ class TinyMCE_Terms_Demo {
 		// @todo Sanitize selection, verify taxonomy
 		// @todo Check if term already exists for post
 
+		// Probably need to also hook into save_post so that terms aren't over/unwritten if the "Update" button is pressed (e.g. if the checkbox isn't present for a newly added category, it'll be un-saved if Update is pressed)
 		$ids = wp_set_object_terms( $_POST['post_id'], $_POST['selection'], $_POST['taxonomy'], true );
 
 		wp_send_json_success( array( 'term' => get_term_by( 'id', $ids[0], $_POST['taxonomy'] ) ) );

@@ -153,6 +153,9 @@
                             mceDemo_nonce: mceDemo.nonce
                         }, function( data ) {
                             if ( data.success ) {
+
+                                // @todo Better feedback for user showing success
+
                                 console.log( data );
                                 term = data.data.term;
 
