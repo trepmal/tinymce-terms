@@ -10,14 +10,14 @@
 class TinyMCE_Terms_Demo {
 
 	/**
-	 *
+	 * TinyMCE plugin name
 	 */
-	var $pluginname = 'TinyMCE_Terms';
+	var $plugin_name = 'TinyMCE_Terms';
 
 	/**
-	 *
+	 * Internal version (cache buster)
 	 */
-	var $internalVersion = 702;
+	var $internal_version = 702;
 
 	/**
 	 * Get hooked in
@@ -26,15 +26,20 @@ class TinyMCE_Terms_Demo {
 	 */
 	function __construct()  {
 
-		add_action('admin_enqueue_scripts',       array( $this, 'admin_enqueue_scripts') );
-		add_action('wp_ajax_mcedemo_add_tax',     array( $this, 'mcedemo_add_tax') );
+		add_action('admin_enqueue_scripts',   array( $this, 'admin_enqueue_scripts') );
+		add_action('wp_ajax_mcedemo_add_tax', array( $this, 'mcedemo_add_tax') );
 
 		// init process for button control
-		add_action('admin_init',       array( $this, 'addbuttons') );
+		add_action('admin_init',              array( $this, 'add_buttons') );
 		// Modify the version when tinyMCE plugins are changed.
-		add_filter('tiny_mce_version', array( $this, 'change_tinymce_version') );
+		add_filter('tiny_mce_version',        array( $this, 'tiny_mce_version') );
 	}
 
+	/**
+	 * Load data via wp_localize_script
+	 *
+	 * @return void
+	 */
 	function admin_enqueue_scripts() {
 
 		global $post;
@@ -54,6 +59,12 @@ class TinyMCE_Terms_Demo {
 		) );
 	}
 
+	/**
+	 * Ajax callback.
+	 * Insert selection as taxonomy term
+	 *
+	 * @return void
+	 */
 	function mcedemo_add_tax() {
 
 		if ( ! check_ajax_referer( 'mceDemo', 'mceDemo_nonce' ) ) {
@@ -65,12 +76,13 @@ class TinyMCE_Terms_Demo {
 		wp_send_json_success( $_POST );
 
 	}
+
 	/**
 	 * register buttons and tinymce plugin
 	 *
 	 * @return void
 	 */
-	function addbuttons() {
+	function add_buttons() {
 		// Don't bother doing this stuff if the current user lacks permissions
 		if ( ! current_user_can('edit_posts') && ! current_user_can('edit_pages') ) {
 			return;
@@ -103,7 +115,7 @@ class TinyMCE_Terms_Demo {
 	 */
 	function add_tinymce_plugin( $plugin_array ) {
 
-		$plugin_array[ $this->pluginname ] =  plugins_url( 'plugin.js', __FILE__ );
+		$plugin_array[ $this->plugin_name ] =  plugins_url( 'plugin.js', __FILE__ );
 
 		return $plugin_array;
 	}
@@ -114,8 +126,8 @@ class TinyMCE_Terms_Demo {
 	 * @param int $version
 	 * @return int
 	 */
-	function change_tinymce_version( $version ) {
-		$version = $version + $this->internalVersion;
+	function tiny_mce_version( $version ) {
+		$version = $version + $this->internal_version;
 		return $version;
 	}
 
