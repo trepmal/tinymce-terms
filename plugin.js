@@ -154,8 +154,22 @@
                         }, function( data ) {
                             if ( data.success ) {
                                 console.log( data );
+                                term = data.data.term;
+
+                                // @todo Core function for updating UI with added terms?
+                                if ( 'category' == term.taxonomy ) {
+                                    field = '<li id="category-' + term.term_id + '">' +
+                                        '<label class="selectit">' +
+                                        '<input value="' + term.term_id + '" type="checkbox" name="post_category[]" id="in-category-' + term.term_id + '" checked="checked"> ' + term.name +
+                                        '</label></li>';
+                                        $('#categorychecklist').prepend( field );
+                                }
+                                if ( 'post_tag' == term.taxonomy ) {
+                                    $('#tax-input-post_tag').append(','+term.name );
+                                }
+
                             } else {
-                                //
+                                // @todo Handle error
                             }
                         }, 'json' );
 

@@ -71,9 +71,12 @@ class TinyMCE_Terms_Demo {
 			wp_send_json_error( $_POST );
 		}
 
-		wp_set_object_terms( $_POST['post_id'], $_POST['selection'], $_POST['taxonomy'], true );
+		// @todo Sanitize selection, verify taxonomy
+		// @todo Check if term already exists for post
 
-		wp_send_json_success( $_POST );
+		$ids = wp_set_object_terms( $_POST['post_id'], $_POST['selection'], $_POST['taxonomy'], true );
+
+		wp_send_json_success( array( 'term' => get_term_by( 'id', $ids[0], $_POST['taxonomy'] ) ) );
 
 	}
 
